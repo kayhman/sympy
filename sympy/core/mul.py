@@ -270,12 +270,13 @@ class Mul(AssocOp):
                     o1 = nc_part.pop()
                     b1,e1 = o1.as_base_exp()
                     b2,e2 = o.as_base_exp()
-                    new_exp = e1 + e2
                     # Only allow powers to combine if the new exponent is
                     # not an Add. This allow things like a**2*b**3 == a**5
                     # if a.is_commutative == False, but prohibits
                     # a**x*a**y and x**a*x**b from combining (x,y commute).
-                    if b1==b2 and (not new_exp.is_Add):
+                    if b1==b2 :
+                      new_exp = e1 + e2
+                      if not new_exp.is_Add:
                         o12 = b1 ** new_exp
 
                         # now o12 could be a commutative object
@@ -284,7 +285,9 @@ class Mul(AssocOp):
                             continue
                         else:
                             nc_seq.insert(0, o12)
-
+                      else:
+                        nc_part.append(o1)
+                        nc_part.append(o)
                     else:
                         nc_part.append(o1)
                         nc_part.append(o)
@@ -512,7 +515,6 @@ class Mul(AssocOp):
 
 
     def _eval_power(b, e):
-
         # don't break up NC terms: (A*B)**3 != A**3*B**3, it is A*B*A*B*A*B
         coeff, b = b.as_coeff_Mul()
         bc, bnc = b.args_cnc()
