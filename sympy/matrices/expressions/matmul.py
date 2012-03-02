@@ -31,8 +31,10 @@ class MatMul(MatrixExpr, Mul):
         if expr.is_Add:
             return MatAdd(*expr.args)
         if expr.is_Pow:
-            assert expr.exp.is_Integer
-            expr = Basic.__new__(MatMul, *[expr.base for i in range(expr.exp)])
+            if expr.exp.is_Integer:
+              expr = Basic.__new__(MatMul, *[expr.base for i in range(expr.exp)])
+            else:
+              expr
         if not expr.is_Mul:
             return expr
 
