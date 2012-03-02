@@ -72,7 +72,8 @@ class MatrixExpr(Expr):
     @_sympifyit('other', NotImplemented)
     @call_highest_priority('__pow__')
     def __rpow__(self, other):
-        raise NotImplementedError("Matrix Power not defined")
+        return MatExp(other, self)
+        #raise NotImplementedError("Matrix Power not defined")
     @_sympifyit('other', NotImplemented)
     @call_highest_priority('__rdiv__')
     def __div__(self, other):
@@ -80,8 +81,8 @@ class MatrixExpr(Expr):
     @_sympifyit('other', NotImplemented)
     @call_highest_priority('__div__')
     def __rdiv__(self, other):
-        raise NotImplementedError()
-        #return MatMul(other, Pow(self, S.NegativeOne))
+        # raise NotImplementedError()
+        return MatMul(other, Pow(self, S.NegativeOne))
 
     def __getitem__(self, key):
         raise NotImplementedError()
@@ -383,5 +384,6 @@ def linear_factors(expr, *syms):
 from matmul import MatMul
 from matadd import MatAdd
 from matpow import MatPow
+from matexp import MatExp
 from transpose import Transpose
 from inverse import Inverse
